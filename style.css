@@ -1,18 +1,96 @@
 body {
-    font-family: Arial;
-    background: #f4f4f4;
-    text-align: center;
+    margin: 0;
+    font-family: "Arial";
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
+/* MAIN CARD */
 .container {
-    background: white;
-    padding: 20px;
-    margin: 50px auto;
-    width: 300px;
-    border-radius: 10px;
+    background: #111827;
+    padding: 25px;
+    width: 350px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    color: white;
 }
 
+/* TITLE */
+h1 {
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+/* INPUT AREA */
+.input-area {
+    display: flex;
+    gap: 8px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+/* BUTTONS */
 button {
-    padding: 8px;
-    margin-left: 5px;
+    background: #6366f1;
+    border: none;
+    color: white;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #4f46e5;
+    transform: scale(1.05);
+}
+
+/* FILTER BUTTONS */
+.filters {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.filters button {
+    flex: 1;
+    margin: 0 3px;
+    background: #374151;
+    font-size: 12px;
+}
+
+/* TASK LIST */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+li {
+    background: #1f2937;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+li:hover {
+    transform: translateX(3px);
+    background: #2b3646;
+}
+
+/* DONE STYLE */
+.done {
+    text-decoration: line-through;
+    opacity: 0.5;
 }
