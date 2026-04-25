@@ -1,20 +1,212 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>To-Do App</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Todo App</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: #0f172a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 420px;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  h1 {
+    text-align: center;
+    color: white;
+    margin-bottom: 15px;
+  }
+
+  .input-box {
+    display: flex;
+    gap: 10px;
+  }
+
+  input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+  }
+
+  button {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 10px;
+    background: #6366f1;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    background: #4f46e5;
+  }
+
+  .filters {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+  }
+
+  .filters button {
+    flex: 1;
+    margin: 0 3px;
+    font-size: 12px;
+    background: #334155;
+  }
+
+  .filters button.active {
+    background: #6366f1;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    background: #334155;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    transition: 0.3s;
+  }
+
+  li.done {
+    opacity: 0.5;
+    text-decoration: line-through;
+  }
+
+  .actions button {
+    margin-left: 5px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  .fade {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(5px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        <h1>My To-Do List</h1>
+<div class="app">
+  <h1>📝 My Todo App</h1>
 
-        <input type="text" id="taskInput" placeholder="Enter a task">
-        <button onclick="addTask()">Add</button>
+  <div class="input-box">
+    <input id="taskInput" placeholder="What do you need to do?" />
+    <button onclick="addTask()">Add</button>
+  </div>
 
-        <ul id="taskList"></ul>
-    </div>
+  <div class="filters">
+    <button onclick="setFilter('all')" class="active">All</button>
+    <button onclick="setFilter('active')">Active</button>
+    <button onclick="setFilter('done')">Done</button>
+  </div>
 
-    <script src="script.js"></script>
+  <ul id="list"></ul>
+</div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let filter = "all";
+
+function save() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function addTask() {
+  const input = document.getElementById("taskInput");
+  if (!input.value.trim()) return;
+
+  tasks.push({
+    id: Date.now(),
+    text: input.value,
+    done: false
+  });
+
+  input.value = "";
+  save();
+  render();
+}
+
+function toggleTask(id) {
+  tasks = tasks.map(t =>
+    t.id === id ? {...t, done: !t.done} : t
+  );
+  save();
+  render();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  save();
+  render();
+}
+
+function setFilter(f) {
+  filter = f;
+  document.querySelectorAll(".filters button")
+    .forEach(btn => btn.classList.remove("active"));
+  event.target.classList.add("active");
+  render();
+}
+
+function render() {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  let filtered = tasks;
+
+  if (filter === "active") filtered = tasks.filter(t => !t.done);
+  if (filter === "done") filtered = tasks.filter(t => t.done);
+
+  filtered.forEach(task => {
+    const li = document.createElement("li");
+    li.className = "fade " + (task.done ? "done" : "");
+
+    li.innerHTML = `
+      <span onclick="toggleTask(${task.id})">${task.text}</span>
+      <div class="actions">
+        <button onclick="deleteTask(${task.id})">🗑️</button>
+      </div>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+render();
+</script>
+
 </body>
 </html>
